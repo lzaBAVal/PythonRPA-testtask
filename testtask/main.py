@@ -29,6 +29,7 @@ class Config:
 
 class ExcelController:
     def __init__(self, config: Config = Config()) -> None:
+        self.titles = ['']
         self.config = config
         self.workbook = openpyxl.Workbook()
         self.name = config.excel_name
@@ -37,7 +38,15 @@ class ExcelController:
     def init(self):
         if not os.path.exists(self.config.excel_path):
             self.workbook.save(self.name)
+            self.add_titles()
+
         self.workbook = load_workbook(self.config.excel_path)
+
+    def add_titles(self):
+        ws1 = self.workbook.active
+        ws1.append(['#', 'path', 'name', 'ext'])
+        self.workbook.save(self.name)
+
 
     def add(self, file_name: str, path: str = None):
         ws1 = self.workbook.active
